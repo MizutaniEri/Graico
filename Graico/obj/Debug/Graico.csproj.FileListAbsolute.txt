@@ -45,3 +45,11 @@ I:\User\SRC\Graico\Graico\obj\Debug\Graico.csprojResolveAssemblyReference.cache
 C:\User\SRC\GitHub\Graico\Graico\bin\Debug\Graico.exe.config
 C:\User\SRC\GitHub\Graico\Graico\obj\Debug\Graico.exe
 C:\User\SRC\GitHub\Graico\Graico\obj\Debug\Graico.pdb
+C:\User\SRC\GitHub\Graico\Graico\bin\Debug\Graico.exe
+C:\User\SRC\GitHub\Graico\Graico\bin\Debug\Graico.pdb
+C:\User\SRC\GitHub\Graico\Graico\obj\Debug\Graico.csprojResolveAssemblyReference.cache
+C:\User\SRC\GitHub\Graico\Graico\obj\Debug\Graico.Form1.resources
+C:\User\SRC\GitHub\Graico\Graico\obj\Debug\Graico.Form2.resources
+C:\User\SRC\GitHub\Graico\Graico\obj\Debug\Graico.Form3.resources
+C:\User\SRC\GitHub\Graico\Graico\obj\Debug\Graico.Properties.Resources.resources
+C:\User\SRC\GitHub\Graico\Graico\obj\Debug\Graico.csproj.GenerateResource.Cache

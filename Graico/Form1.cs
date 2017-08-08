@@ -34,6 +34,7 @@ namespace Graico
         public Form1()
         {
             InitializeComponent();
+
             MouseDown += picBox_MouseDown;
             MouseUp += picBox_MouseUp;
             PreviewKeyDown += Form1_PreviewKeyDown;
@@ -693,6 +694,30 @@ namespace Graico
             else
             {
                 VolBtnNext = false;
+            }
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up)
+            {
+                this.AutoScrollPosition = new Point(this.AutoScrollPosition.X, -this.AutoScrollPosition.Y - 10);
+            }
+            else if (e.KeyCode == Keys.Down)
+            {
+                this.AutoScrollPosition = new Point(this.AutoScrollPosition.X, -this.AutoScrollPosition.Y + 10);
+            }
+            else if (e.KeyCode == Keys.PageUp)
+            {
+                this.AutoScrollPosition = new Point(this.AutoScrollPosition.X, -this.AutoScrollPosition.Y - 100);
+            }
+            else if (e.KeyCode == Keys.PageDown)
+            {
+                this.AutoScrollPosition = new Point(this.AutoScrollPosition.X, -this.AutoScrollPosition.Y + 100);
+            }
+            else if (e.KeyCode == Keys.Home)
+            {
+                this.AutoScrollPosition = new Point(this.AutoScrollPosition.X, 0);
             }
         }
     }

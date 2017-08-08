@@ -135,7 +135,8 @@ namespace Graico
                                 }
                                 return false;
                             })
-                            .OrderBy(x => x.Name, new NaturalComparer())
+                            //.OrderBy(x => x.Name, new NaturalComparer())
+                            .OrderBy(x => x.Name, new StrNatComparer())
                             .ToList();
                     }
                     catch
@@ -175,7 +176,8 @@ namespace Graico
                             rtc = true;
                         }
                         return rtc;
-                    }).OrderBy(x => x, new NaturalComparer()).ToList();
+                    //}).OrderBy(x => x, new NaturalComparer()).ToList();
+                    }).OrderBy(x => x, new StrNatComparer()).ToList();
                 });
             }
         }
