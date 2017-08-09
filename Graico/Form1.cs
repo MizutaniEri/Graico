@@ -30,6 +30,8 @@ namespace Graico
         private bool exec;
         private Point mouseDownLocation;
         private bool VolBtnNext;
+        private string[] graphicFileExt = { ".jpg", ".jpe", ".jpeg", ".gif", ".bmp", ".png" };
+
 
         public Form1()
         {
@@ -57,12 +59,7 @@ namespace Graico
                 {
                     string ext = Path.GetExtension(cmd).ToLower();
                     if ((ext == ".zip" ||
-                         ext == ".jpg" ||
-                         ext == ".jpe" ||
-                         ext == ".jpeg" ||
-                         ext == ".gif" ||
-                         ext == ".bmp" ||
-                         ext == ".png") &&
+                         graphicFileExt.Contains(ext)) &&
                         File.Exists(cmd))
                     {
                         await OpenGrapicFile(cmd);
@@ -290,7 +287,7 @@ namespace Graico
                     MessageBox.Show("画像ファイルが存在しません! File:" + file);
                 }
                 if (FileList != null && FileList.Count > 0)
-                    await SetJumpImage(1);
+                    await SetJumpImage(0);
             }
         }
 
