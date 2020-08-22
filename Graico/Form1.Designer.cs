@@ -40,6 +40,7 @@
             this.volButtonEnableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.zoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wideFitZoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fullscreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hideProgressbarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -60,12 +61,13 @@
             this.volButtonEnableToolStripMenuItem,
             this.toolStripSeparator3,
             this.zoomToolStripMenuItem,
+            this.wideFitZoomToolStripMenuItem,
             this.fullscreenToolStripMenuItem,
             this.hideProgressbarToolStripMenuItem,
             this.toolStripSeparator1,
             this.closeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(165, 264);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(165, 286);
             // 
             // openToolStripMenuItem
             // 
@@ -135,6 +137,14 @@
             this.zoomToolStripMenuItem.Text = "Zoom";
             this.zoomToolStripMenuItem.Click += new System.EventHandler(this.zoomToolStripMenuItem_Click);
             // 
+            // wideFitZoomToolStripMenuItem
+            // 
+            this.wideFitZoomToolStripMenuItem.CheckOnClick = true;
+            this.wideFitZoomToolStripMenuItem.Name = "wideFitZoomToolStripMenuItem";
+            this.wideFitZoomToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.wideFitZoomToolStripMenuItem.Text = "Wide fit zoom";
+            this.wideFitZoomToolStripMenuItem.Click += new System.EventHandler(this.wideFitZoomToolStripMenuItem_Click);
+            // 
             // fullscreenToolStripMenuItem
             // 
             this.fullscreenToolStripMenuItem.CheckOnClick = true;
@@ -198,6 +208,7 @@
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem volButtonEnableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hideProgressbarToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem wideFitZoomToolStripMenuItem;
     }
 }
 

@@ -16,6 +16,7 @@ namespace Graico
         public string FileName { get; set; }
         private List<ZipArchiveEntry> ZipArcEntryList = null;
         private Object thisLock = new Object();
+        private string[] graphicFileExt = { ".jpg", ".jpe", ".jpeg", ".gif", ".bmp", ".png", ".tif", ".tiff" };
 
         /// <summary>
         /// 非同期画像ファイル読み込み
@@ -63,7 +64,7 @@ namespace Graico
         private async Task GetZipGraphicImage(
             List<Image> imgList,
             int newIndex,
-            int DivSize = 2048)
+            int DivSize = 4096)
         {
             if (ZipArcEntryList.Count < (newIndex))
             {
@@ -112,7 +113,8 @@ namespace Graico
         public async Task<List<string>> GetFileListAsync(
             string fileName)
         {
-            if (Path.GetExtension(fileName).ToLower() == ".zip")
+            var extens = Path.GetExtension(fileName).ToLower();
+            if (extens == ".zip" || extens == ".cbz")
             {
                 var zipStream = File.OpenRead(fileName);
                 return await Task.Run(() =>
@@ -124,12 +126,7 @@ namespace Graico
                             .Where(x =>
                             {
                                 var ext = Path.GetExtension(x.Name).ToLower();
-                                if (ext == ".jpg" ||
-                                    ext == ".jpeg" ||
-                                    ext == ".jpe" ||
-                                    ext == ".png" ||
-                                    ext == ".bmp" ||
-                                    ext == ".gif")
+                                if (graphicFileExt.Contains(ext))
                                 {
                                     return true;
                                 }
@@ -166,12 +163,7 @@ namespace Graico
                         // 拡張子の取得
                         string ext = Path.GetExtension(file).ToLower();
                         bool rtc = false;
-                        if (ext == ".jpg" ||
-                            ext == ".jpeg" ||
-                            ext == ".jpe" ||
-                            ext == ".png" ||
-                            ext == ".bmp" ||
-                            ext == ".gif")
+                        if (graphicFileExt.Contains(ext))
                         {
                             rtc = true;
                         }
@@ -212,8 +204,9 @@ namespace Graico
             {
                 getFile = FileList[index];
                 var ext = Path.GetExtension(fileName).ToLower();
-                if (ext != ".jpg" && ext != ".jpeg" && ext != ".png" &&
-                    ext != ".bmp" && ext != ".gif")
+                //if (ext != ".jpg" && ext != ".jpeg" && ext != ".png" &&
+                //    ext != ".bmp" && ext != ".gif")
+                if (!graphicFileExt.Contains(ext))
                 {
                     int newIndex = index + addIndex;
                     if (newIndex >= 0 && newIndex < FileList.Count)
@@ -266,7 +259,7 @@ namespace Graico
             //string fileName,
             int index,
             bool zipFile,
-            int divSize = 2048)
+            int divSize = 4096)
         {
             if (index < 0 || index >= FileList.Count)
             {
@@ -313,15 +306,15 @@ namespace Graico
         public static void GetDivideImage(
             Image img,
             List<Image> divImg,
-            int DivSize = 2048)
+            int DivSize = 4096)
         {
             int height = img.Height;
             // 分割の必要なしなら、読み込んだイメージをリストに追加して返す
-            //if (height <= DivSize || DivSize <= 0)
-            //{
-            //    divImg.Add(img);
-            //    return;
-            //}
+            if (height <= DivSize || DivSize <= 0)
+            {
+                divImg.Add(img);
+                return;
+            }
 
             // 分割数計算
             int divNo = 0;
@@ -381,7 +374,7 @@ namespace Graico
         public static void GetDivideImageFormFile(
             string fileName,
             List<Image> divImg,
-            int DivSize = 2048)
+            int DivSize = 4096)
         {
             // まず全部を読み込む(これでメモリ不足になるなら、別の手を考える必要あり)
             var img = Image.FromFile(fileName);
@@ -397,7 +390,7 @@ namespace Graico
         public static void GetDivideImageFormStream(
             Stream fileStream,
             List<Image> divImg,
-            int DivSize = 2048)
+            int DivSize = 4096)
         {
             // まず全部を読み込む(これでメモリ不足になるなら、別の手を考える必要あり)
             var img = Image.FromStream(fileStream);

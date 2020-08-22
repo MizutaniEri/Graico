@@ -30,7 +30,7 @@ namespace Graico
         private bool exec;
         private Point mouseDownLocation;
         private bool VolBtnNext;
-        private string[] graphicFileExt = { ".jpg", ".jpe", ".jpeg", ".gif", ".bmp", ".png" };
+        private string[] graphicFileExt = { ".jpg", ".jpe", ".jpeg", ".gif", ".bmp", ".png", ".tif", ".tiff" };
 
 
         public Form1()
@@ -58,8 +58,8 @@ namespace Graico
                 else if (exeExec)
                 {
                     string ext = Path.GetExtension(cmd).ToLower();
-                    if ((ext == ".zip" ||
-                         graphicFileExt.Contains(ext)) &&
+                    if ((ext == ".zip" || ext == ".cbz") ||
+                        graphicFileExt.Contains(ext) &&
                         File.Exists(cmd))
                     {
                         await OpenGrapicFile(cmd);
@@ -76,7 +76,7 @@ namespace Graico
                             Close();
                             return;
                         }
-                        else if (ext != ".zip")
+                        else if (ext != ".zip" && ext != ".cbz")
                         {
                             jumpNo = FileList.FindIndex(fileName => fileName == cmd);
                         }
@@ -107,7 +107,7 @@ namespace Graico
                 ZipFileName = file;
                 Debug.WriteLine("File List Count=" + FileList.Count);
                 string ext = Path.GetExtension(file).ToLower();
-                if (ext == ".zip")
+                if (ext == ".zip" || ext == ".cbz")
                 {
                     zipFile = true;
                     nowFile = FileList[0];
@@ -151,6 +151,7 @@ namespace Graico
             picBox.Image = img;
             picBox.Size = new Size(img.Width, img.Height);
             picBox.SizeMode = PictureBoxSizeMode.CenterImage;
+            picBox.Enabled = true;
             picBox.Visible = true;
             picBox.ContextMenuStrip = contextMenuStrip1;
             int index = FileList.FindIndex(file => file == nowFile) + 1;
@@ -277,7 +278,7 @@ namespace Graico
         private async void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var openFile = new OpenFileDialog();
-            openFile.Filter = "Graphic Files|*.jpg;*.jpeg;*.bmp;*.gif;*.png;*.zip";
+            openFile.Filter = "Graphic Files|*.jpg;*.jpeg;*.bmp;*.gif;*.png;*.zip;*.cbz";
             if (openFile.ShowDialog() == DialogResult.OK)
             {
                 string file = openFile.FileName;
@@ -503,7 +504,7 @@ namespace Graico
             var phMen = new Microsoft.VisualBasic.Devices.ComputerInfo().AvailablePhysicalMemory;
             if ((System.Environment.Is64BitOperatingSystem &&
                 phMen >= (4L * 1024L * 1024L * 1024L)) ||
-                zoomToolStripMenuItem.Checked)
+                (zoomToolStripMenuItem.Checked || wideFitZoomToolStripMenuItem.Checked))
             {
                 var findIndex = FileList.FindIndex(file => file == nowFile);
                 if (next)
@@ -543,6 +544,22 @@ namespace Graico
                     {
                         pictureBox.Size = newImage.Size;
                     }
+                    pictureBox.Location = new Point(0, 0);
+                    pictureBox.MouseDown += picBox_MouseDown;
+                    pictureBox.MouseUp += picBox_MouseUp;
+                    Controls.Add(pictureBox);
+                    pictureBox.Refresh();
+                }
+                else if (wideFitZoomToolStripMenuItem.Checked)
+                {
+                    GetScreenWideFitSize(ref newSize);
+
+                    var newImage = await AsyncGraphReader.GetZoomImageFromFile(FileList, FileList[findIndex], newSize, zipFile);
+                    nowFile = FileList[findIndex];
+                    SetMainTitle(findIndex);
+                    AutoScrollPosition = new Point(0, 0);
+                    pictureBox.Image = newImage;
+                    pictureBox.Size = newImage.Size;
                     pictureBox.Location = new Point(0, 0);
                     pictureBox.MouseDown += picBox_MouseDown;
                     pictureBox.MouseUp += picBox_MouseUp;
@@ -589,6 +606,10 @@ namespace Graico
 
         private async void zoomToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (zoomToolStripMenuItem.Checked && wideFitZoomToolStripMenuItem.Checked)
+            {
+                wideFitZoomToolStripMenuItem.Checked = false;
+            }
             var findIndex = FileList.FindIndex(file => file == nowFile);
             if (findIndex < 0)
             {
@@ -630,6 +651,31 @@ namespace Graico
                 newX = screenX;
                 newY = RY;
             }
+            imageSize.Width = newX;
+            imageSize.Height = newY;
+        }
+ 
+        private static void GetScreenWideFitSize(ref Size imageSize)
+        {
+            // スクリーンサイズの取得
+            Rectangle Rect = Screen.GetWorkingArea(new Point(0, 0));
+            // スクリーンサイズの幅と高さ
+            int screenX = Rect.Size.Width;
+            int screenY = Rect.Size.Height;
+            // 画像の幅と高さ
+            int imageX = imageSize.Width;
+            int imageY = imageSize.Height;
+            int newX = 0;
+            int newY = 0;
+            int RX = 0;
+            int RY = 0;
+
+            // 画像の比率に沿った幅と高さ計算
+            RX = imageX * screenY / imageY;
+            RY = imageY * screenX / imageX;
+            // 横幅はスクリーンサイズ固定
+            newY = RY;
+            newX = screenX;
             imageSize.Width = newX;
             imageSize.Height = newY;
         }
@@ -716,6 +762,28 @@ namespace Graico
             {
                 this.AutoScrollPosition = new Point(this.AutoScrollPosition.X, 0);
             }
+            else if (e.KeyCode == Keys.End)
+            {
+                this.AutoScrollPosition = new Point(this.AutoScrollPosition.X, 30000);
+            }
+        }
+
+        private async void wideFitZoomToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (zoomToolStripMenuItem.Checked && wideFitZoomToolStripMenuItem.Checked)
+            {
+                zoomToolStripMenuItem.Checked = false;
+            }
+            var findIndex = FileList.FindIndex(file => file == nowFile);
+            if (findIndex < 0)
+            {
+                findIndex = FileList.Count - 1;
+            }
+            else if (findIndex > FileList.Count)
+            {
+                findIndex = 1;
+            }
+            await SetPicBoxSizeMode(findIndex, false);
         }
     }
 }
